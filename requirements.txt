@@ -1,0 +1,10 @@
+pyYaml
+pyJWT
+Jinja2
+zipfile36
+jupyter
+ipywidgets
+requests
+pytest
+pytest-html
+cryptography

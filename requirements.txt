@@ -8,3 +8,10 @@ requests
 pytest
 pytest-html
 cryptography
+pandas
+numpy
+cython
+ipython
+pyyaml
+pysnmp
+paramiko

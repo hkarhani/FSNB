@@ -4,8 +4,8 @@ MAINTAINER Hassan El Karhani <hkarhani@gmail.com>
 
 ENV JUPYTER_PORT 8888
 ENV JUPYTER_IP 0.0.0.0
-ENV JUPYTER_NOTEBOOK_DIR /opt/jupyter
-ENV DEBIAN_FRONTEND=noninteractive
+ENV JUPYTER_NOTEBOOK_DIR /notebooks
+ARG DEBIAN_FRONTEND=noninteractive
 
 USER root
 
@@ -26,8 +26,19 @@ RUN apt-get install --no-install-recommends -y \
         zip
 
 
-RUN pip --no-cache-dir install jupyter pandas numpy cython \
-        ipython pyyaml pysnmp paramiko requests
+VOLUME $JUPYTER_NOTEBOOK_DIR
+
+RUN mkdir -p $JUPYTER_NOTEBOOK_DIR
+WORKDIR $JUPYTER_NOTEBOOK_DIR
+
+RUN CFLAGS="-I/usr/pkg/include" python3 -m pip install Pillow
+RUN apt-get update
+RUN apt-get install -y git libjpeg-dev zlib1g-dev
+
+COPY requirements.txt ./
+RUN pip install -U pip
+RUN pip install --no-cache-dir -r requirements.txt
+RUN rm ./requirements.txt
 
 # Installing IPerl without tests ...
 RUN curl -sL http://cpanmin.us | perl - App::cpanminus \
@@ -36,26 +47,9 @@ RUN curl -sL http://cpanmin.us | perl - App::cpanminus \
         XML::Simple \
         YAML::Tiny
 
-RUN apt-get update
-RUN apt-get install -y git libjpeg-dev zlib1g-dev
-
 RUN apt-get clean && \
     rm -rf /tmp/downloaded_packages/* && \
     rm -rf /var/lib/apt/lists/*
-
-VOLUME $JUPYTER_NOTEBOOK_DIR
-
-RUN mkdir -p $JUPYTER_NOTEBOOK_DIR
-WORKDIR $JUPYTER_NOTEBOOK_DIR
-
-RUN CFLAGS="-I/usr/pkg/include" python3 -m pip install Pillow
-
-COPY requirements.txt ./
-RUN pip install -U pip
-RUN pip install --no-cache-dir -r requirements.txt
-RUN rm ./requirements.txt
-
-ADD *.ipynb ./
 
 RUN chown -R $(whoami):$(whoami) $JUPYTER_NOTEBOOK_DIR
 

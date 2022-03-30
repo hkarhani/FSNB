@@ -51,6 +51,3 @@ RUN apt-get clean && \
     rm -rf /tmp/downloaded_packages/* && \
     rm -rf /var/lib/apt/lists/*
 
-RUN chown -R $(whoami):$(whoami) $JUPYTER_NOTEBOOK_DIR
-
-ENTRYPOINT iperl notebook --port $JUPYTER_PORT --ip $JUPYTER_IP --notebook-dir $JUPYTER_NOTEBOOK_DIR --allow-root --NotebookApp.token=''

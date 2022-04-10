@@ -15,3 +15,7 @@ ipython
 pyyaml
 pysnmp
 paramiko
+papermill
+git+https://github.com/psf/black
+matplotlib
+openpyxl

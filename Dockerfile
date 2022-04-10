@@ -23,7 +23,8 @@ RUN apt-get install --no-install-recommends -y \
         python3 \
         python3-pip \
         python3-dev \
-        zip
+        zip \
+        nmap
 
 
 VOLUME $JUPYTER_NOTEBOOK_DIR

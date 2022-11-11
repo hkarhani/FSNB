@@ -1,4 +1,4 @@
-FROM jupyter/minimal-notebook
+FROM jupyter/scipy-notebook
 
 MAINTAINER Hassan El Karhani <hkarhani@gmail.com>
 
@@ -26,12 +26,6 @@ RUN apt-get install --no-install-recommends -y \
         zip \
         nmap
 
-
-VOLUME $JUPYTER_NOTEBOOK_DIR
-
-RUN mkdir -p $JUPYTER_NOTEBOOK_DIR
-WORKDIR $JUPYTER_NOTEBOOK_DIR
-
 RUN CFLAGS="-I/usr/pkg/include" python3 -m pip install Pillow
 RUN apt-get update
 RUN apt-get install -y git libjpeg-dev zlib1g-dev
@@ -52,3 +46,9 @@ RUN apt-get clean && \
     rm -rf /tmp/downloaded_packages/* && \
     rm -rf /var/lib/apt/lists/*
 
+VOLUME $JUPYTER_NOTEBOOK_DIR
+
+RUN mkdir -p $JUPYTER_NOTEBOOK_DIR
+WORKDIR $JUPYTER_NOTEBOOK_DIR
+
+CMD jupyter notebook --ip 0.0.0.0 --port 8888 --allow-root

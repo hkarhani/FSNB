@@ -1,0 +1,14 @@
+version: '3.7'
+
+services:
+    fsnb:
+        image: fsnbimage
+        container_name: fsnb
+        build:
+            context: .
+            dockerfile: ./Dockerfile
+        volumes:
+          - ".:/notebooks:rw"
+        restart: always
+        tty: true
+        stdin_open: true

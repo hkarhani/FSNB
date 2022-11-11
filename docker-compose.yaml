@@ -9,6 +9,8 @@ services:
             dockerfile: ./Dockerfile
         volumes:
           - ".:/notebooks:rw"
+        ports: 
+          - "9091:8888"
         restart: always
         tty: true
         stdin_open: true

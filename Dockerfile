@@ -14,6 +14,7 @@ ARG DEBIAN_FRONTEND=noninteractive
 
 USER root
 
+# System packages
 RUN apt-get update && \
     apt-get install --no-install-recommends -y \
       build-essential \
@@ -21,27 +22,34 @@ RUN apt-get update && \
       git \
       pkg-config \
       libzmq3-dev \
+      libssl-dev \
       ssh \
       vim \
       python3-dev \
       zip \
       nmap \
       libjpeg-dev \
-      zlib1g-dev && \
+      zlib1g-dev \
+      cpanminus && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
+# Python dependencies
 COPY requirements.txt /tmp/requirements.txt
-
 RUN python -m pip install --upgrade pip setuptools wheel && \
-    if [ -s /tmp/requirements.txt ]; then pip install --no-cache-dir -r /tmp/requirements.txt; fi && \
+    if [ -s /tmp/requirements.txt ]; then \
+      pip install --no-cache-dir -r /tmp/requirements.txt; \
+    fi && \
     rm -f /tmp/requirements.txt
 
-# Install IPerl kernel and required Perl modules
-RUN curl -fsSL https://cpanmin.us | perl - App::cpanminus && \
-    cpanm --notest --verbose ZMQ::FFI && \
-    cpanm --notest --verbose Devel::IPerl
+# Perl / IPerl dependencies
+# Keep in separate steps so Docker Hub logs clearly show the failing layer if anything breaks.
+RUN cpanm --notest IO::Socket::SSL Net::SSLeay
+RUN cpanm --notest Alien::FFI FFI::Platypus
+RUN cpanm --notest ZMQ::FFI
+RUN cpanm --notest Devel::IPerl
 
+# Notebook workspace
 RUN mkdir -p "${JUPYTER_NOTEBOOK_DIR}" && \
     chown -R "${NB_UID}:${NB_GID}" "${JUPYTER_NOTEBOOK_DIR}"
 

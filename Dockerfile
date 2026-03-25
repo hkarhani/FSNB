@@ -1,4 +1,4 @@
-FROM quay.io/jupyter/scipy-notebook:latest
+FROM quay.io/jupyter/base-notebook:latest
 
 LABEL org.opencontainers.image.title="FSNB" \
       org.opencontainers.image.description="FSNB custom JupyterLab environment" \
@@ -11,45 +11,48 @@ ENV JUPYTER_PORT=8888 \
     PIP_NO_CACHE_DIR=1
 
 ARG DEBIAN_FRONTEND=noninteractive
+ARG ENABLE_IPERL=true
+ARG INSTALL_DEBUG_TOOLS=false
 
 USER root
 
-# System packages
 RUN apt-get update && \
     apt-get install --no-install-recommends -y \
       build-essential \
       curl \
-      git \
       pkg-config \
       libzmq3-dev \
       libssl-dev \
-      ssh \
-      vim \
       python3-dev \
-      zip \
-      nmap \
       libjpeg-dev \
       zlib1g-dev \
+      zip \
       cpanminus && \
+    if [ "$INSTALL_DEBUG_TOOLS" = "true" ]; then \
+      apt-get install --no-install-recommends -y \
+        git \
+        openssh-client \
+        vim \
+        nmap; \
+    fi && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-# Python dependencies
 COPY requirements.txt /tmp/requirements.txt
+
 RUN python -m pip install --upgrade pip setuptools wheel && \
     if [ -s /tmp/requirements.txt ]; then \
       pip install --no-cache-dir -r /tmp/requirements.txt; \
     fi && \
     rm -f /tmp/requirements.txt
 
-# Perl / IPerl dependencies
-# Keep in separate steps so Docker Hub logs clearly show the failing layer if anything breaks.
-RUN cpanm --notest IO::Socket::SSL Net::SSLeay
-RUN cpanm --notest Alien::FFI FFI::Platypus
-RUN cpanm --notest ZMQ::FFI
-RUN cpanm --notest Devel::IPerl
+RUN if [ "$ENABLE_IPERL" = "true" ]; then \
+      cpanm --notest IO::Socket::SSL Net::SSLeay && \
+      cpanm --notest Alien::FFI FFI::Platypus && \
+      cpanm --notest ZMQ::FFI && \
+      cpanm --notest Devel::IPerl; \
+    fi
 
-# Notebook workspace
 RUN mkdir -p "${JUPYTER_NOTEBOOK_DIR}" && \
     chown -R "${NB_UID}:${NB_GID}" "${JUPYTER_NOTEBOOK_DIR}"
 

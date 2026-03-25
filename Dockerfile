@@ -37,9 +37,9 @@ RUN python -m pip install --upgrade pip setuptools wheel && \
     if [ -s /tmp/requirements.txt ]; then pip install --no-cache-dir -r /tmp/requirements.txt; fi && \
     rm -f /tmp/requirements.txt
 
-# Install IPerl
-# Install IPerl kernel
+# Install IPerl kernel and required Perl modules
 RUN curl -fsSL https://cpanmin.us | perl - App::cpanminus && \
+    cpanm --notest --verbose ZMQ::FFI && \
     cpanm --notest --verbose Devel::IPerl
 
 RUN mkdir -p "${JUPYTER_NOTEBOOK_DIR}" && \

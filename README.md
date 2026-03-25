@@ -195,7 +195,7 @@ chmod -R 755 .
 * Multi-profile setup (dev vs prod)
 * GPU-enabled builds
 * Automated CI/CD pipeline for image validation
-* Pre-configured trading / RL environments
+* Pre-configured Automation environments
 
 ---
 

@@ -1,10 +1,7 @@
-pyYaml
-pyJWT
+PyYAML
+PyJWT
 Jinja2
-jinja2==3.0.3
-nbconvert==6.4.3
-zipfile36
-jupyter
+nbconvert
 ipywidgets
 requests
 pytest
@@ -14,11 +11,11 @@ pandas
 numpy
 cython
 ipython
-pyyaml
 pysnmp
 paramiko
 papermill
-git+https://github.com/psf/black
+black
 matplotlib
 openpyxl
 diagrams
+Pillow

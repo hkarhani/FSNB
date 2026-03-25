@@ -38,12 +38,9 @@ RUN python -m pip install --upgrade pip setuptools wheel && \
     rm -f /tmp/requirements.txt
 
 # Install IPerl
-RUN curl -sL https://cpanmin.us | perl - App::cpanminus && \
-    /usr/local/bin/cpanm --notest \
-      Devel::IPerl \
-      Test::More \
-      XML::Simple \
-      YAML::Tiny
+# Install IPerl kernel
+RUN curl -fsSL https://cpanmin.us | perl - App::cpanminus && \
+    cpanm --notest --verbose Devel::IPerl
 
 RUN mkdir -p "${JUPYTER_NOTEBOOK_DIR}" && \
     chown -R "${NB_UID}:${NB_GID}" "${JUPYTER_NOTEBOOK_DIR}"

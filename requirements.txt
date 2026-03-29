@@ -19,3 +19,4 @@ matplotlib
 openpyxl
 diagrams
 Pillow
+tornado>=6.5.5

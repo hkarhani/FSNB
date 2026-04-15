@@ -12,7 +12,7 @@ numpy
 cython
 ipython
 pysnmp==4.4.12
-pyasn1==0.4.8
+pyasn1==0.6.3
 paramiko
 papermill
 black

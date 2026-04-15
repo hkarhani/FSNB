@@ -1,4 +1,4 @@
-FROM quay.io/jupyter/base-notebook:latest
+FROM quay.io/jupyter/base-notebook:python-3.11
 
 LABEL org.opencontainers.image.title="FSNB" \
       org.opencontainers.image.description="FSNB custom JupyterLab environment" \

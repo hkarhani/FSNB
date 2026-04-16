@@ -15,7 +15,6 @@ ARG ENABLE_IPERL=true
 ARG INSTALL_DEBUG_TOOLS=false
 
 USER root
-
 RUN apt-get update && \
     apt-get install --no-install-recommends -y \
       build-essential \
@@ -27,6 +26,7 @@ RUN apt-get update && \
       libjpeg-dev \
       zlib1g-dev \
       zip \
+      libxml-simple-perl \
       cpanminus && \
     if [ "$INSTALL_DEBUG_TOOLS" = "true" ]; then \
       apt-get install --no-install-recommends -y \

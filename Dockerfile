@@ -27,6 +27,7 @@ RUN apt-get update && \
       zlib1g-dev \
       zip \
       libxml-simple-perl \
+      libyaml-tiny-perl \
       cpanminus && \
     if [ "$INSTALL_DEBUG_TOOLS" = "true" ]; then \
       apt-get install --no-install-recommends -y \
